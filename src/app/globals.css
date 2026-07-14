@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------- palette --------------------------------
+   ink      #04090F   abyss background
+   trench   #071722   deep panel
+   lumen    #5CF2E0   bioluminescent cyan (primary accent)
+   lure     #FFB454   angler-lure amber (secondary accent)
+   bone     #DCEDEF   text
+   void     #010305   deepest black
+------------------------------------------------------------------------- */
+
+@theme {
+  --color-ink: #04090f;
+  --color-trench: #071722;
+  --color-lumen: #5cf2e0;
+  --color-lure: #ffb454;
+  --color-bone: #dcedef;
+  --color-void: #010305;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-archivo);
+  --font-body: var(--font-manrope);
+  --font-mono: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Display type: Archivo pushed into its expanded width for the
+   "Monument Extended" look, free from Google Fonts. */
+@utility font-display {
+  font-family: var(--font-display);
+  font-stretch: 122%;
+}
+
+html {
+  background: var(--color-ink);
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink);
+  color: var(--color-bone);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-lumen) 30%, transparent);
+  color: var(--color-bone);
+}
+
+/* thin luminous scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-lumen) 25%, var(--color-trench));
+  border-radius: 8px;
+  border: 2px solid var(--color-void);
+}
+
+/* ------------------------------ keyframes ------------------------------ */
+
+@keyframes drift-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sonar {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes ray-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg) translateX(-2%);
+    opacity: 0.6;
+  }
+  50% {
+    transform: rotate(4deg) translateX(2%);
+    opacity: 1;
+  }
+}
+
+.marquee-track {
+  animation: drift-x 30s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.sonar-ring {
+  animation: sonar 4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.light-rays {
+  animation: ray-sway 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .sonar-ring,
+  .light-rays {
+    animation: none;
+  }
 }
